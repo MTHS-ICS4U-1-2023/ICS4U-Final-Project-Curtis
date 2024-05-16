@@ -231,10 +231,10 @@ def game_scene():
     cannonballs = []
     for cannon_ball_number in range(constants.TOTAL_NUMBER_OF_CANNONBALLS):
         a_single_cannon_ball = stage.Sprite(
-          image_bank, 
-          2, 
-          constants.OFF_SCREEN_X, 
-          constants.OFF_SCREEN_Y
+        image_bank, 
+        2, 
+        constants.OFF_SCREEN_X, 
+        constants.OFF_SCREEN_Y
         )
         cannonballs.append(a_single_cannon_ball)
 
@@ -460,11 +460,11 @@ def game_scene():
                     boat.x + 10,
                     boat.y + 13,
                 ):
-                  # alien hit the ship
-                  sound.stop()
-                  sound.play(pirate_boom)
-                  time.sleep(3.0)
-                  game_over_scene(score)
+                    # alien hit the ship
+                    sound.stop()
+                    sound.play(pirate_boom)
+                    time.sleep(3.0)
+                    game_over_scene(score)
 
         # checks if the boat and an pirateship are colliding
         for pirate_number in range(len(pirateships_right)):
@@ -479,11 +479,11 @@ def game_scene():
                     boat.x + 10,
                     boat.y + 13,
                 ):
-                  # alien hit the ship
-                  sound.stop()
-                  sound.play(pirate_boom)
-                  time.sleep(3.0)
-                  game_over_scene(score)
+                    # alien hit the ship
+                    sound.stop()
+                    sound.play(pirate_boom)
+                    time.sleep(3.0)
+                    game_over_scene(score)
 
         # redraw sprites
         game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
@@ -509,7 +509,7 @@ def game_over_scene(final_score):
     # add text objects
     text = []
     text1 = stage.Text(
-       width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
+        width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
     )
 
     text1.move(22, 20)
@@ -557,4 +557,4 @@ def game_over_scene(final_score):
 
 
 if __name__ == "__main__":
-  splash_scene()
+    splash_scene()
