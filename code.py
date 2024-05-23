@@ -25,7 +25,7 @@ def splash_scene():
     sound = ugame.audio
     sound.stop()
     sound.mute(False)
-    sound.play(coin_sound)
+    # sound.play(coin_sound)
     
     # image banks for CircuitPython
     image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
@@ -231,10 +231,10 @@ def game_scene():
     cannonballs = []
     for cannon_ball_number in range(constants.TOTAL_NUMBER_OF_CANNONBALLS):
         a_single_cannon_ball = stage.Sprite(
-          image_bank, 
-          2, 
-          constants.OFF_SCREEN_X, 
-          constants.OFF_SCREEN_Y
+        image_bank, 
+        2, 
+        constants.OFF_SCREEN_X, 
+        constants.OFF_SCREEN_Y
         )
         cannonballs.append(a_single_cannon_ball)
 
@@ -294,14 +294,14 @@ def game_scene():
             for cannon_ball_number in range(len(cannonballs)):
                 if cannonballs[cannon_ball_number].x < 0:
                     cannonballs[cannon_ball_number].move(boat.x - 1, boat.y)
-                    sound.play(cannon_sound)
+                    # sound.play(cannon_sound)
                     break
 
         if b_button == constants.button_state["button_just_pressed"]:
             for cannon_ball_number in range(len(cannonballs)):
                 if cannonballs[cannon_ball_number].x < 0:
                     cannonballs[cannon_ball_number].move(boat.x + 1, boat.y)
-                    sound.play(cannon_sound)
+                    # sound.play(cannon_sound)
                     break
             
         # each frame move the cannonballs,that have been fired
@@ -315,7 +315,7 @@ def game_scene():
                     )
                     if cannonballs[cannon_ball_number].x > constants.SCREEN_X:
                         # remove a point if yuor cannonball misses
-                        score -= 1
+                        score = score - 1
                         if score < 0:
                             score = 0
                         score_text.clear()
@@ -335,7 +335,7 @@ def game_scene():
                     )
                     if cannonballs[cannon_ball_number].x < -16:
                         # remove a point if yuor cannonball misses
-                        score -= 1
+                        score = score - 1
                         if score < 0:
                             score = 0
                         score_text.clear()
@@ -400,7 +400,7 @@ def game_scene():
                             pirateships_right[pirate_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
                             cannonballs[cannon_ball_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
                             sound.stop()
-                            sound.play(pirate_boom)
+                            # sound.play(pirate_boom)
                             score = score + 1
                             score_text.clear()
                             score_text.cursor(0, 0)
@@ -430,7 +430,7 @@ def game_scene():
                             pirateships_left[pirate_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
                             cannonballs[cannon_ball_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
                             sound.stop()
-                            sound.play(pirate_boom)
+                            # sound.play(pirate_boom)
                             score = score + 1
                             score_text.clear()
                             score_text.cursor(0, 0)
@@ -460,11 +460,11 @@ def game_scene():
                     boat.x + 10,
                     boat.y + 13,
                 ):
-                  # alien hit the ship
-                  sound.stop()
-                  sound.play(pirate_boom)
-                  time.sleep(3.0)
-                  game_over_scene(score)
+                    # alien hit the ship
+                    sound.stop()
+                    # sound.play(pirate_boom)
+                    time.sleep(3.0)
+                    game_over_scene(score)
 
         # checks if the boat and an pirateship are colliding
         for pirate_number in range(len(pirateships_right)):
@@ -479,11 +479,11 @@ def game_scene():
                     boat.x + 10,
                     boat.y + 13,
                 ):
-                  # alien hit the ship
-                  sound.stop()
-                  sound.play(pirate_boom)
-                  time.sleep(3.0)
-                  game_over_scene(score)
+                    # alien hit the ship
+                    sound.stop()
+                    # sound.play(pirate_boom)
+                    time.sleep(3.0)
+                    game_over_scene(score)
 
         # redraw sprites
         game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
@@ -509,7 +509,7 @@ def game_over_scene(final_score):
     # add text objects
     text = []
     text1 = stage.Text(
-       width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
+        width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
     )
 
     text1.move(22, 20)
@@ -557,4 +557,4 @@ def game_over_scene(final_score):
 
 
 if __name__ == "__main__":
-  splash_scene()
+    splash_scene()
