@@ -188,7 +188,7 @@ def game_scene():
         image_bank, 1, 74, 56
     )
     
-    pirate_ship_right = stage.Sprite(
+    """pirate_ship_right = stage.Sprite(
         image_bank,
         3,
         (constants.SCREEN_X - (constants.SPRITE_SIZE * 2)),
@@ -238,7 +238,7 @@ def game_scene():
         )
         cannonballs.append(a_single_cannon_ball)
 
-    # create a stage for the background to show up on
+    """# create a stage for the background to show up on
     # and set the frame rate to 60fps
     game = stage.Stage(ugame.display, 60)
 
@@ -290,7 +290,7 @@ def game_scene():
                 boat.move(boat.x, constants.OFF_TOP_SCREEN)
 
         # update game logic
-        if a_button == constants.button_state["button_just_pressed"]:
+        """if a_button == constants.button_state["button_just_pressed"]:
             for cannon_ball_number in range(len(cannonballs)):
                 if cannonballs[cannon_ball_number].x < 0:
                     cannonballs[cannon_ball_number].move(boat.x - 1, boat.y)
@@ -485,7 +485,7 @@ def game_scene():
                     time.sleep(3.0)
                     game_over_scene(score)
 
-        # redraw sprites
+        """# redraw sprites
         game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
         game.tick()
 
