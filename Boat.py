@@ -6,34 +6,34 @@ Created on: June 2023
 This is the "Boat" class
 """
 
-class Images:
-    def __init__(self, x_position: int, y_position: int, sprite_image: str):
+import constants
+
+class Boat:
+    def __init__(self, x_position: int, y_position: int):
         self._x_position = x_position
         self._y_position = y_position
-        self._sprite_image = sprite_image
 
-    # Getters
+    # Getter for x_position
+    @property
     def x_position(self) -> int:
         return self._x_position
 
+    # Getter for y_position
+    @property
     def y_position(self) -> int:
         return self._y_position
 
-    def sprite_image(self) -> str:
-        return self._sprite_image
-
-    # Setters
-    def x_position(self, value: int):
-        self._x_position = value
-
+    # Setter for y_position
+    @y_position.setter
     def y_position(self, value: int):
         self._y_position = value
 
-    # Methods
-    def velocity(self) -> int:
-        # Implement the logic to calculate velocity
-        pass
+    # Method to change the boat's velocity
+    def velocity(self, boat_speed: int) -> None:
+        self._y_position += boat_speed
 
+
+"""
     def is_colliding(sprite1, sprite2) -> bool:
         # Implement the logic to determine if two sprites are colliding
         pass
@@ -45,3 +45,4 @@ class Images:
     def is_off_screen(self, stage) -> bool:
         # Implement the logic to determine if the sprite is off screen
         pass
+"""

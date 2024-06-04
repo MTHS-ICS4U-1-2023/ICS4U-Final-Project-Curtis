@@ -6,6 +6,8 @@ Created on: June 2023
 This program is the "Pirate Shooter" program on the PyBadge
 """
 
+from Boat import Boat
+
 import random
 import time
 
@@ -143,7 +145,7 @@ def game_scene():
     score_text.move(1, 1)
     score_text.text("Score: {0}".format(score))
     
-    def show_pirateships_right():
+    """def show_pirateships_right():
         # this function takes an pirateship from off the screen and moves it on screen
         for pirateship_number_right in range(len(pirateships_right)):
             if pirateships_right[pirateship_number_right].y == constants.OFF_SCREEN_Y:
@@ -161,7 +163,7 @@ def game_scene():
                     constants.OFF_LEFT_SCREEN,
                     random.randint(0, (constants.SCREEN_Y - constants.SPRITE_SIZE))
                 )
-                break
+                break"""
 
     # image banks for CircuitPython
     image_bank = stage.Bank.from_bmp16("pirate_shooter.bmp")
@@ -187,6 +189,8 @@ def game_scene():
     boat = stage.Sprite(
         image_bank, 1, 74, 56
     )
+
+    boat_sprite = Boat(74, 56)
     
     """pirate_ship_right = stage.Sprite(
         image_bank,
@@ -243,7 +247,8 @@ def game_scene():
     game = stage.Stage(ugame.display, 60)
 
     # set all layers of all sprites, items show up in order
-    game.layers = [score_text] + pirateships_left + pirateships_right + [boat] + cannonballs + [background]
+    # game.layers = [score_text] + pirateships_left + pirateships_right + [boat] + cannonballs + [background]
+    game.layers = [score_text] + [boat] + [background]
 
     # render all sprites
     # most likely you will only render the background once per game scene
@@ -278,14 +283,18 @@ def game_scene():
 
         if keys & ugame.K_UP:
             if boat.y > constants.OFF_TOP_SCREEN:
-                boat.move(boat.x, (boat.y - constants.BOAT_SPEED))
+                # boat.move(boat.x, (boat.y - constants.BOAT_SPEED))
+                boat_sprite.velocity(-constants.BOAT_SPEED)
+                boat.move(boat.x, boat_sprite.y_position)
             else:
                 # rather than stopping the sprite when it reaches the border
                 # it will appear on the other side
                 boat.move(boat.x, constants.OFF_BOTTOM_SCREEN)
         if keys & ugame.K_DOWN:
             if boat.y < constants.OFF_BOTTOM_SCREEN:
-                boat.move(boat.x, (boat.y + constants.BOAT_SPEED))
+                # boat.move(boat.x, (boat.y + constants.BOAT_SPEED))
+                boat_sprite.velocity(constants.BOAT_SPEED)
+                boat.move(boat.x, boat_sprite.y_position)
             else:
                 boat.move(boat.x, constants.OFF_TOP_SCREEN)
 
@@ -486,7 +495,8 @@ def game_scene():
                     game_over_scene(score)
 
         """# redraw sprites
-        game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
+        # game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
+        game.render_sprites([boat])
         game.tick()
 
 
