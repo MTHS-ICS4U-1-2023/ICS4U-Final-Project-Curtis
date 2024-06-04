@@ -32,17 +32,10 @@ class Boat:
     def velocity(self, boat_speed: int) -> None:
         self._y_position += boat_speed
 
+    # Method to warp boat to the bottom of the screen
+    def warp_bottom(self) -> None:
+        self._y_position = constants.OFF_BOTTOM_SCREEN
 
-"""
-    def is_colliding(sprite1, sprite2) -> bool:
-        # Implement the logic to determine if two sprites are colliding
-        pass
-
-    def collision(self, sprite) -> bool:
-        # Implement the logic to handle collision with another sprite
-        pass
-
-    def is_off_screen(self, stage) -> bool:
-        # Implement the logic to determine if the sprite is off screen
-        pass
-"""
+    # Method to warp boat to the top of the screen
+    def warp_top(self) -> None:
+        self._y_position = constants.OFF_TOP_SCREEN

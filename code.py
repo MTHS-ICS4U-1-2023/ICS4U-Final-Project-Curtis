@@ -283,20 +283,19 @@ def game_scene():
 
         if keys & ugame.K_UP:
             if boat.y > constants.OFF_TOP_SCREEN:
-                # boat.move(boat.x, (boat.y - constants.BOAT_SPEED))
                 boat_sprite.velocity(-constants.BOAT_SPEED)
                 boat.move(boat.x, boat_sprite.y_position)
             else:
-                # rather than stopping the sprite when it reaches the border
-                # it will appear on the other side
-                boat.move(boat.x, constants.OFF_BOTTOM_SCREEN)
+                boat_sprite.warp_bottom()
+                boat.move(boat.x, boat_sprite.y_position)
+
         if keys & ugame.K_DOWN:
             if boat.y < constants.OFF_BOTTOM_SCREEN:
-                # boat.move(boat.x, (boat.y + constants.BOAT_SPEED))
                 boat_sprite.velocity(constants.BOAT_SPEED)
                 boat.move(boat.x, boat_sprite.y_position)
             else:
-                boat.move(boat.x, constants.OFF_TOP_SCREEN)
+                boat_sprite.warp_top()
+                boat.move(boat.x, boat_sprite.y_position)
 
         # update game logic
         """if a_button == constants.button_state["button_just_pressed"]:
