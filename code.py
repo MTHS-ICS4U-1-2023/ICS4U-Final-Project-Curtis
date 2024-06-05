@@ -6,7 +6,8 @@ Created on: June 2023
 This program is the "Pirate Shooter" program on the PyBadge
 """
 
-from Boat import Boat
+from boat_class import Boat
+from cannon_ball_class import CannonBall
 
 import random
 import time
@@ -230,9 +231,11 @@ def game_scene():
     # place 2 pirateships on the screen
     show_pirateships_right()
     show_pirateships_left()
-    
+    """
     # create list of cannonballs for when we shoot
     cannonballs = []
+    cannonball_objects = []  # To keep track of CannonBall objects
+
     for cannon_ball_number in range(constants.TOTAL_NUMBER_OF_CANNONBALLS):
         a_single_cannon_ball = stage.Sprite(
         image_bank, 
@@ -242,13 +245,18 @@ def game_scene():
         )
         cannonballs.append(a_single_cannon_ball)
 
-    """# create a stage for the background to show up on
+        cannon_ball_sprite = CannonBall(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+        cannonball_objects.append(cannon_ball_sprite)
+
+
+
+    # create a stage for the background to show up on
     # and set the frame rate to 60fps
     game = stage.Stage(ugame.display, 60)
 
     # set all layers of all sprites, items show up in order
     # game.layers = [score_text] + pirateships_left + pirateships_right + [boat] + cannonballs + [background]
-    game.layers = [score_text] + [boat] + [background]
+    game.layers = [score_text] + [boat] + cannonballs + [background]
 
     # render all sprites
     # most likely you will only render the background once per game scene
@@ -284,80 +292,72 @@ def game_scene():
         if keys & ugame.K_UP:
             if boat.y > constants.OFF_TOP_SCREEN:
                 boat_sprite.velocity(-constants.BOAT_SPEED)
-                boat.move(boat.x, boat_sprite.y_position)
+                boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
             else:
                 boat_sprite.warp_bottom()
-                boat.move(boat.x, boat_sprite.y_position)
+                boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
 
         if keys & ugame.K_DOWN:
             if boat.y < constants.OFF_BOTTOM_SCREEN:
                 boat_sprite.velocity(constants.BOAT_SPEED)
-                boat.move(boat.x, boat_sprite.y_position)
+                boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
             else:
                 boat_sprite.warp_top()
-                boat.move(boat.x, boat_sprite.y_position)
+                boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
 
         # update game logic
-        """if a_button == constants.button_state["button_just_pressed"]:
+        if a_button == constants.button_state["button_just_pressed"]:
             for cannon_ball_number in range(len(cannonballs)):
-                if cannonballs[cannon_ball_number].x < 0:
-                    cannonballs[cannon_ball_number].move(boat.x - 1, boat.y)
+                if cannonball_objects[cannon_ball_number].is_off_screen() == True:
+                    cannonball_objects[cannon_ball_number].fire_cannon_ball(boat_sprite.x_pos, boat_sprite.y_pos, -1)
+                    cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
                     # sound.play(cannon_sound)
                     break
 
         if b_button == constants.button_state["button_just_pressed"]:
             for cannon_ball_number in range(len(cannonballs)):
-                if cannonballs[cannon_ball_number].x < 0:
-                    cannonballs[cannon_ball_number].move(boat.x + 1, boat.y)
+                if cannonball_objects[cannon_ball_number].is_off_screen() == True:
+                    cannonball_objects[cannon_ball_number].fire_cannon_ball(boat_sprite.x_pos , boat_sprite.y_pos, 1)
+                    cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
                     # sound.play(cannon_sound)
                     break
             
         # each frame move the cannonballs,that have been fired
         for cannon_ball_number in range(len(cannonballs)):
-            if cannonballs[cannon_ball_number].x > constants.OFF_SCREEN_Y:
-                # check if cannonball is on the left or right side of the ship
-                if cannonballs[cannon_ball_number].x > boat.x:
-                    cannonballs[cannon_ball_number].move(
-                        cannonballs[cannon_ball_number].x + constants.CANNONBALL_SPEED, 
-                        cannonballs[cannon_ball_number].y
-                    )
-                    if cannonballs[cannon_ball_number].x > constants.SCREEN_X:
-                        # remove a point if yuor cannonball misses
-                        score = score - 1
+            if cannonball_objects[cannon_ball_number].is_off_screen() == False:
+                if cannonball_objects[cannon_ball_number].is_cannon_ball_left_side() == False:
+                    cannonball_objects[cannon_ball_number].velocity(constants.CANNONBALL_SPEED)
+                    cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
+                    if cannonball_objects[cannon_ball_number].is_out_of_bounds() == True:
+                        score -= 1
                         if score < 0:
                             score = 0
                         score_text.clear()
                         score_text.cursor(0, 0)
                         score_text.move(1, 1)
                         score_text.text(f"Score: {score:.0f}")
+                        cannonball_objects[cannon_ball_number].move_off_screen()
+                        cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
 
-                        cannonballs[cannon_ball_number].move(
-                            constants.OFF_SCREEN_X,
-                            constants.OFF_SCREEN_Y
-                        )
-
-                if cannonballs[cannon_ball_number].x < boat.x:
-                    cannonballs[cannon_ball_number].move(
-                        cannonballs[cannon_ball_number].x - constants.CANNONBALL_SPEED, 
-                        cannonballs[cannon_ball_number].y
-                    )
-                    if cannonballs[cannon_ball_number].x < -16:
-                        # remove a point if yuor cannonball misses
-                        score = score - 1
+        # each frame move the cannonballs,that have been fired
+        for cannon_ball_number in range(len(cannonballs)):
+            if cannonball_objects[cannon_ball_number].is_off_screen() == False:
+                if cannonball_objects[cannon_ball_number].is_cannon_ball_left_side() == True:
+                    cannonball_objects[cannon_ball_number].velocity(-constants.CANNONBALL_SPEED)
+                    cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
+                    if cannonball_objects[cannon_ball_number].is_out_of_bounds() == True:
+                        score -= 1
                         if score < 0:
                             score = 0
                         score_text.clear()
                         score_text.cursor(0, 0)
                         score_text.move(1, 1)
                         score_text.text(f"Score: {score:.0f}")
+                        cannonball_objects[cannon_ball_number].move_off_screen()
+                        cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
 
-                        cannonballs[cannon_ball_number].move(
-                            constants.OFF_SCREEN_X,
-                            constants.OFF_SCREEN_Y
-                        )
-        
         # each frame move the pirateships across, that are on screen
-        for pirateships_number_left in range(len(pirateships_left)):
+        """for pirateships_number_left in range(len(pirateships_left)):
             if pirateships_left[pirateships_number_left].x > constants.OFF_SCREEN_Y:
                 pirateships_left[pirateships_number_left].move(
                     pirateships_left[pirateships_number_left].x + constants.PIRATE_SPEED,
@@ -495,7 +495,7 @@ def game_scene():
 
         """# redraw sprites
         # game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
-        game.render_sprites([boat])
+        game.render_sprites([boat] + cannonballs)
         game.tick()
 
 

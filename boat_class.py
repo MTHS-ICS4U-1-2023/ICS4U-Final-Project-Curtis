@@ -15,17 +15,17 @@ class Boat:
 
     # Getter for x_position
     @property
-    def x_position(self) -> int:
+    def x_pos(self) -> int:
         return self._x_position
 
     # Getter for y_position
     @property
-    def y_position(self) -> int:
+    def y_pos(self) -> int:
         return self._y_position
 
     # Setter for y_position
-    @y_position.setter
-    def y_position(self, value: int):
+    @y_pos.setter
+    def y_pos(self, value: int):
         self._y_position = value
 
     # Method to change the boat's velocity
