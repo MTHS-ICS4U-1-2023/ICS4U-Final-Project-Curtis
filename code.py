@@ -8,7 +8,8 @@ This program is the "Pirate Shooter" program on the PyBadge
 
 from boat_class import Boat
 from cannon_ball_class import CannonBall
-from pirate_ship_class import PirateShip
+from cannon_ball_list_class import CannonBallList
+#from pirate_ship_class import PirateShip
 
 import random
 import time
@@ -203,7 +204,7 @@ def game_scene():
         4,
         (0 + constants.SPRITE_SIZE),
         56,
-    )"""
+    )
     
     # create list of pirateships,for both the left and right side
     pirateships_right = []
@@ -235,10 +236,10 @@ def game_scene():
     # place 2 pirateships on the screen
     pirateships_right_objects[1].spawn_pirateship_right()
     pirateships_left_objects[1].spawn_pirateship_left()
-    
+    """
     # create list of cannonballs for when we shoot
     cannonballs = []
-    cannonball_objects = []  # To keep track of CannonBall objects
+    cannonball_objects = CannonBallList()
 
     for cannon_ball_number in range(constants.TOTAL_NUMBER_OF_CANNONBALLS):
         a_single_cannon_ball = stage.Sprite(
@@ -250,7 +251,7 @@ def game_scene():
         cannonballs.append(a_single_cannon_ball)
 
         cannon_ball_sprite = CannonBall(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-        cannonball_objects.append(cannon_ball_sprite)
+        cannonball_objects.add_to_list(cannon_ball_sprite)
 
 
 
@@ -259,7 +260,8 @@ def game_scene():
     game = stage.Stage(ugame.display, 60)
 
     # set all layers of all sprites, items show up in order
-    game.layers = [score_text] + pirateships_left + pirateships_right + [boat] + cannonballs + [background]
+    # game.layers = [score_text] + pirateships_left + pirateships_right + [boat] + cannonballs + [background]
+    game.layers = [score_text] + [boat] + cannonballs + [background]
 
     # render all sprites
     # most likely you will only render the background once per game scene
@@ -308,22 +310,16 @@ def game_scene():
                 boat_sprite.warp_top()
                 boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
 
+        # Update the position of each sprite based on the corresponding CannonBall object
+        for i, cannon_ball in enumerate(cannonball_objects.cannon_balls):
+            cannonballs[i].move(cannon_ball.x_pos, cannon_ball.y_pos)
+
         # update game logic
         if a_button == constants.button_state["button_just_pressed"]:
-            for cannon_ball_number in range(len(cannonballs)):
-                if cannonball_objects[cannon_ball_number].is_off_screen() == True:
-                    cannonball_objects[cannon_ball_number].fire_cannon_ball(boat_sprite.x_pos, boat_sprite.y_pos, -1)
-                    cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
-                    # sound.play(cannon_sound)
-                    break
+            cannonball_objects.fire_cannon_ball(boat_sprite.x_pos, boat_sprite.y_pos, -1)
 
         if b_button == constants.button_state["button_just_pressed"]:
-            for cannon_ball_number in range(len(cannonballs)):
-                if cannonball_objects[cannon_ball_number].is_off_screen() == True:
-                    cannonball_objects[cannon_ball_number].fire_cannon_ball(boat_sprite.x_pos , boat_sprite.y_pos, 1)
-                    cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
-                    # sound.play(cannon_sound)
-                    break
+            cannonball_objects.fire_cannon_ball(boat_sprite.x_pos, boat_sprite.y_pos, 1)
             
         # each frame move the cannonballs,that have been fired
         for cannon_ball_number in range(len(cannonballs)):
@@ -343,7 +339,7 @@ def game_scene():
                         cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
 
         # each frame move the cannonballs,that have been fired
-        for cannon_ball_number in range(len(cannonballs)):
+        """for cannon_ball_number in range(len(cannonballs)):
             if cannonball_objects[cannon_ball_number].is_off_screen() == False:
                 if cannonball_objects[cannon_ball_number].is_cannon_ball_left_side() == True:
                     cannonball_objects[cannon_ball_number].velocity(-constants.CANNONBALL_SPEED)
@@ -415,7 +411,7 @@ def game_scene():
                                 pirateships_left_objects[pirateships_num_left].spawn_pirateship_left()
                                 break
 
-        """# checks if a cannonball and a pirateship are colliding
+        # checks if a cannonball and a pirateship are colliding
         for cannon_ball_number in range(len(cannonballs)):
             if cannonballs[cannon_ball_number].y > constants.OFF_SCREEN_Y:
                 for pirate_number in range(len(pirateships_right)):
@@ -514,7 +510,8 @@ def game_scene():
                     game_over_scene(score)
 
         """# redraw sprites
-        game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
+        # game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
+        game.render_sprites([boat] + cannonballs)
         game.tick()
 
 
