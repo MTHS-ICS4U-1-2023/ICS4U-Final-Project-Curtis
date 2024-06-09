@@ -9,7 +9,8 @@ This program is the "Pirate Shooter" program on the PyBadge
 from boat_class import Boat
 from cannon_ball_class import CannonBall
 from cannon_ball_list_class import CannonBallList
-#from pirate_ship_class import PirateShip
+from pirate_ship_class import PirateShip
+from pirate_ship_list_class import PirateShipList
 
 import random
 import time
@@ -147,26 +148,6 @@ def game_scene():
     score_text.cursor(0, 0)
     score_text.move(1, 1)
     score_text.text("Score: {0}".format(score))
-    
-    """def show_pirateships_right():
-        # this function takes an pirateship from off the screen and moves it on screen
-        for pirateship_number_right in range(len(pirateships_right)):
-            if pirateships_right[pirateship_number_right].y == constants.OFF_SCREEN_Y:
-                pirateships_right[pirateship_number_right].move(
-                    constants.OFF_RIGHT_SCREEN,
-                    random.randint(0, (constants.SCREEN_Y - constants.SPRITE_SIZE))
-                )
-                break
-
-    def show_pirateships_left():
-        # this function takes an pirateship from off the screen and moves it on screen
-        for pirateship_number_left in range(len(pirateships_left)):
-            if pirateships_left[pirateship_number_left].y == constants.OFF_SCREEN_Y:
-                pirateships_left[pirateship_number_left].move(
-                    constants.OFF_LEFT_SCREEN,
-                    random.randint(0, (constants.SCREEN_Y - constants.SPRITE_SIZE))
-                )
-                break"""
 
     # image banks for CircuitPython
     image_bank = stage.Bank.from_bmp16("pirate_shooter.bmp")
@@ -179,7 +160,6 @@ def game_scene():
 
     # get sound ready
     cannon_sound = open("player_cannon.wav", "rb")
-    # pirate_boom = open("player_explosion.wav", "rb")
     pirate_boom = open("pirate_explosion.wav", "rb")
     sound = ugame.audio
     sound.stop()
@@ -190,78 +170,47 @@ def game_scene():
     background = stage.Grid(image_bank, 10, 8)
 
     boat = stage.Sprite(image_bank, 1, 74, 56)
-    boat_sprite = Boat(74, 56)
-    
-    """pirate_ship_right = stage.Sprite(
-        image_bank,
-        3,
-        (constants.SCREEN_X - (constants.SPRITE_SIZE * 2)),
-        56,
-    )
-    
-    pirate_ship_left = stage.Sprite(
-        image_bank,
-        4,
-        (0 + constants.SPRITE_SIZE),
-        56,
-    )
-    
-    # create list of pirateships,for both the left and right side
-    pirateships_right = []
-    pirateships_right_objects = []
-    for pirateship_number in range(constants.TOTAL_NUMBER_OF_RIGHT_PIRATES):
-        a_single_pirateship = stage.Sprite(
-            image_bank,
-            3,
-            constants.OFF_SCREEN_X,
-            constants.OFF_SCREEN_Y
-        )
-        pirateships_right.append(a_single_pirateship)
-        pirateships_right_sprite = PirateShip(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-        pirateships_right_objects.append(pirateships_right_sprite)
+    boat_object = Boat(74, 56)
 
-    pirateships_left = []
-    pirateships_left_objects = []
+    # create list of pirateships,for both the left and right side
+    pirateships = []
+    pirateship_objects = PirateShipList()
+
+    for pirateship_number in range(constants.TOTAL_NUMBER_OF_RIGHT_PIRATES):
+        a_single_pirateship = stage.Sprite(image_bank, 3, constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+
+        pirateships.append(a_single_pirateship)
+        a_pirateship_object = PirateShip(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y, "right")
+        pirateship_objects.add_to_list(a_pirateship_object)
+
     for pirateship_number in range(constants.TOTAL_NUMBER_OF_LEFT_PIRATES):
-        a_single_pirateship = stage.Sprite(
-            image_bank,
-            4,
-            constants.OFF_SCREEN_X,
-            constants.OFF_SCREEN_Y
-        )
-        pirateships_left.append(a_single_pirateship)
-        pirateships_left_sprite = PirateShip(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-        pirateships_left_objects.append(pirateships_left_sprite)
+        a_single_pirateship = stage.Sprite(image_bank, 4, constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+
+        pirateships.append(a_single_pirateship)
+        a_pirateship_object = PirateShip(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y, "left")
+        pirateship_objects.add_to_list(a_pirateship_object)
     
     # place 2 pirateships on the screen
-    pirateships_right_objects[1].spawn_pirateship_right()
-    pirateships_left_objects[1].spawn_pirateship_left()
-    """
+    pirateship_objects.spawn_pirateship_right()
+    pirateship_objects.spawn_pirateship_left()
+    
     # create list of cannonballs for when we shoot
     cannonballs = []
     cannonball_objects = CannonBallList()
 
     for cannon_ball_number in range(constants.TOTAL_NUMBER_OF_CANNONBALLS):
-        a_single_cannon_ball = stage.Sprite(
-        image_bank, 
-        2, 
-        constants.OFF_SCREEN_X, 
-        constants.OFF_SCREEN_Y
-        )
+        a_single_cannon_ball = stage.Sprite(image_bank, 2, constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
         cannonballs.append(a_single_cannon_ball)
 
-        cannon_ball_sprite = CannonBall(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-        cannonball_objects.add_to_list(cannon_ball_sprite)
-
-
+        a_cannon_ball_object = CannonBall(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+        cannonball_objects.add_to_list(a_cannon_ball_object)
 
     # create a stage for the background to show up on
     # and set the frame rate to 60fps
     game = stage.Stage(ugame.display, 60)
 
     # set all layers of all sprites, items show up in order
-    # game.layers = [score_text] + pirateships_left + pirateships_right + [boat] + cannonballs + [background]
-    game.layers = [score_text] + [boat] + cannonballs + [background]
+    game.layers = [score_text] + pirateships + [boat] + cannonballs + [background]
 
     # render all sprites
     # most likely you will only render the background once per game scene
@@ -296,226 +245,68 @@ def game_scene():
 
         if keys & ugame.K_UP:
             if boat.y > constants.OFF_TOP_SCREEN:
-                boat_sprite.velocity(-constants.BOAT_SPEED)
-                boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
+                boat_object.velocity(-constants.BOAT_SPEED)
+                boat.move(boat_object.x_pos, boat_object.y_pos)
             else:
-                boat_sprite.warp_bottom()
-                boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
+                boat_object.warp_bottom()
+                boat.move(boat_object.x_pos, boat_object.y_pos)
 
         if keys & ugame.K_DOWN:
             if boat.y < constants.OFF_BOTTOM_SCREEN:
-                boat_sprite.velocity(constants.BOAT_SPEED)
-                boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
+                boat_object.velocity(constants.BOAT_SPEED)
+                boat.move(boat_object.x_pos, boat_object.y_pos)
             else:
-                boat_sprite.warp_top()
-                boat.move(boat_sprite.x_pos, boat_sprite.y_pos)
+                boat_object.warp_top()
+                boat.move(boat_object.x_pos, boat_object.y_pos)
 
         # Update the position of each sprite based on the corresponding CannonBall object
-        for i, cannon_ball in enumerate(cannonball_objects.cannon_balls):
-            cannonballs[i].move(cannon_ball.x_pos, cannon_ball.y_pos)
+        for cannon_ball_counter, cannon_ball in enumerate(cannonball_objects.cannon_balls):
+            cannonballs[cannon_ball_counter].move(cannon_ball.x_pos, cannon_ball.y_pos)
+
+        for pirate_ship_counter, pirate_ship in enumerate(pirateship_objects.pirate_ships):
+            pirateships[pirate_ship_counter].move(pirate_ship.x_pos, pirate_ship.y_pos)
 
         # update game logic
         if a_button == constants.button_state["button_just_pressed"]:
-            cannonball_objects.fire_cannon_ball(boat_sprite.x_pos, boat_sprite.y_pos, -1)
+            cannonball_objects.fire_cannon_ball(boat_object.x_pos, boat_object.y_pos, -1)
 
         if b_button == constants.button_state["button_just_pressed"]:
-            cannonball_objects.fire_cannon_ball(boat_sprite.x_pos, boat_sprite.y_pos, 1)
-            
-        # each frame move the cannonballs,that have been fired
-        for cannon_ball_number in range(len(cannonballs)):
-            if cannonball_objects[cannon_ball_number].is_off_screen() == False:
-                if cannonball_objects[cannon_ball_number].is_cannon_ball_left_side() == False:
-                    cannonball_objects[cannon_ball_number].velocity(constants.CANNONBALL_SPEED)
-                    cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
-                    if cannonball_objects[cannon_ball_number].is_out_of_bounds() == True:
-                        score -= 1
-                        if score < 0:
-                            score = 0
-                        score_text.clear()
-                        score_text.cursor(0, 0)
-                        score_text.move(1, 1)
-                        score_text.text(f"Score: {score:.0f}")
-                        cannonball_objects[cannon_ball_number].move_off_screen()
-                        cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
+            cannonball_objects.fire_cannon_ball(boat_object.x_pos, boat_object.y_pos, 1)
+        
+        cannonball_objects.velocity(constants.CANNONBALL_SPEED)
 
-        # each frame move the cannonballs,that have been fired
-        """for cannon_ball_number in range(len(cannonballs)):
-            if cannonball_objects[cannon_ball_number].is_off_screen() == False:
-                if cannonball_objects[cannon_ball_number].is_cannon_ball_left_side() == True:
-                    cannonball_objects[cannon_ball_number].velocity(-constants.CANNONBALL_SPEED)
-                    cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
-                    if cannonball_objects[cannon_ball_number].is_out_of_bounds() == True:
-                        score -= 1
-                        if score < 0:
-                            score = 0
-                        score_text.clear()
-                        score_text.cursor(0, 0)
-                        score_text.move(1, 1)
-                        score_text.text(f"Score: {score:.0f}")
-                        cannonball_objects[cannon_ball_number].move_off_screen()
-                        cannonballs[cannon_ball_number].move(cannonball_objects[cannon_ball_number].x_pos, cannonball_objects[cannon_ball_number].y_pos)
+        pirateship_objects.velocity(constants.PIRATE_SPEED)
 
-        # each frame move the pirateships across, that are on screen
-        for pirateships_number_right in range(len(pirateships_right)):
-            if pirateships_right_objects[pirateships_number_right].is_off_screen() == False:
-                pirateships_right_objects[pirateships_number_right].velocity(-constants.PIRATE_SPEED)
-                pirateships_right[pirateships_number_right].move(
-                    pirateships_right_objects[pirateships_number_right].x_pos,
-                    pirateships_right_objects[pirateships_number_right].y_pos
-                )
-                if pirateships_right_objects[pirateships_number_right].is_out_of_bounds() == True:
-                    pirateships_right_objects[pirateships_number_right].move_off_screen()
-                    pirateships_right[pirateships_number_right].move(
-                        pirateships_right_objects[pirateships_number_right].x_pos,
-                        pirateships_right_objects[pirateships_number_right].y_pos
-                    )
+        if cannonball_objects.is_cannon_ball_off_screen():
+            score -= 1
+            if score < 0:
+                score = 0
+            score_text.clear()
+            score_text.cursor(0, 0)
+            score_text.move(1, 1)
+            score_text.text(f"Score: {score:.0f}")
 
-                    # randomly spawn a pirateship on either the left or right side
-                    random_number = random.randint(1, 2)
-                    if random_number == 1:
-                        for pirateships_num_right in range(len(pirateships_right)):
-                            if pirateships_right_objects[pirateships_num_right].is_off_screen() == True:
-                                pirateships_right_objects[pirateships_num_right].spawn_pirateship_right()
-                                break
-                    if random_number == 2:
-                        for pirateships_num_left in range(len(pirateships_left)):
-                            if pirateships_left_objects[pirateships_num_left].is_off_screen() == True:
-                                pirateships_left_objects[pirateships_num_left].spawn_pirateship_left()
-                                break
+        if pirateship_objects.is_cannon_ball_colliding(cannonball_objects):
+            sound.stop()
+            # sound.play(pirate_boom)
+            score += 1
+            score_text.clear()
+            score_text.cursor(0, 0)
+            score_text.move(1, 1)
+            score_text.text(f"Score: {score:.0f}")
 
-        # each frame move the pirateships across, that are on screen
-        for pirateships_number_left in range(len(pirateships_left)):
-            if pirateships_left_objects[pirateships_number_left].is_off_screen() == False:
-                pirateships_left_objects[pirateships_number_left].velocity(constants.PIRATE_SPEED)
-                pirateships_left[pirateships_number_left].move(
-                    pirateships_left_objects[pirateships_number_left].x_pos,
-                    pirateships_left_objects[pirateships_number_left].y_pos
-                )
-                if pirateships_left_objects[pirateships_number_left].is_out_of_bounds() == True:
-                    pirateships_left_objects[pirateships_number_left].move_off_screen()
-                    pirateships_left[pirateships_number_left].move(
-                        pirateships_left_objects[pirateships_number_left].x_pos,
-                        pirateships_left_objects[pirateships_number_left].y_pos
-                    )
+        if pirateship_objects.is_boat_colliding(boat_object):
+            sound.stop()
+            # sound.play(pirate_boom)
+            time.sleep(3.0)
+            game_over_scene(score)
 
-                    # randomly spawn a pirateship on either the left or right side
-                    random_number = random.randint(1, 2)
-                    if random_number == 1:
-                        for pirateships_num_right in range(len(pirateships_right)):
-                            if pirateships_right_objects[pirateships_num_right].is_off_screen() == True:
-                                pirateships_right_objects[pirateships_num_right].spawn_pirateship_right()
-                                break
-                    if random_number == 2:
-                        for pirateships_num_left in range(len(pirateships_left)):
-                            if pirateships_left_objects[pirateships_num_left].is_off_screen() == True:
-                                pirateships_left_objects[pirateships_num_left].spawn_pirateship_left()
-                                break
-
-        # checks if a cannonball and a pirateship are colliding
-        for cannon_ball_number in range(len(cannonballs)):
-            if cannonballs[cannon_ball_number].y > constants.OFF_SCREEN_Y:
-                for pirate_number in range(len(pirateships_right)):
-                    if pirateships_right[pirate_number].y > constants.OFF_SCREEN_Y:
-                        if stage.collide(cannonballs[cannon_ball_number].x + 4, cannonballs[cannon_ball_number].y + 4,
-                                        cannonballs[cannon_ball_number].x + 12, cannonballs[cannon_ball_number].y + 12,
-                                        pirateships_right[pirate_number].x, pirateships_right[pirate_number].y,
-                                        pirateships_right[pirate_number].x + 16, pirateships_right[pirate_number].y + 16,):
-                            # you hit an alien
-                            pirateships_right[pirate_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-                            cannonballs[cannon_ball_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-                            sound.stop()
-                            # sound.play(pirate_boom)
-                            score = score + 1
-                            score_text.clear()
-                            score_text.cursor(0, 0)
-                            score_text.move(1, 1)
-                            score_text.text(f"Score: {score:.0f}")
-                            random_number = random.randint(1, 2)
-                            if random_number == 1:
-                                show_pirateships_left()
-                            if random_number == 2:
-                                show_pirateships_right()
-                            random_number = random.randint(1, 2)
-                            if random_number == 1:
-                                show_pirateships_left()
-                            if random_number == 2:
-                                show_pirateships_right()
-
-        # checks if a laser and an alien are colliding
-        for cannon_ball_number in range(len(cannonballs)):
-            if cannonballs[cannon_ball_number].y > constants.OFF_SCREEN_Y:
-                for pirate_number in range(len(pirateships_left)):
-                    if pirateships_left[pirate_number].y > constants.OFF_SCREEN_Y:
-                        if stage.collide(cannonballs[cannon_ball_number].x + 4, cannonballs[cannon_ball_number].y + 4,
-                                        cannonballs[cannon_ball_number].x + 12, cannonballs[cannon_ball_number].y + 12,
-                                        pirateships_left[pirate_number].x, pirateships_left[pirate_number].y,
-                                        pirateships_left[pirate_number].x + 16, pirateships_left[pirate_number].y + 16,):
-                            # you hit an alien
-                            pirateships_left[pirate_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-                            cannonballs[cannon_ball_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-                            sound.stop()
-                            # sound.play(pirate_boom)
-                            score = score + 1
-                            score_text.clear()
-                            score_text.cursor(0, 0)
-                            score_text.move(1, 1)
-                            score_text.text(f"Score: {score:.0f}")
-                            random_number = random.randint(1, 2)
-                            if random_number == 1:
-                                show_pirateships_left()
-                            if random_number == 2:
-                                show_pirateships_right()
-                            random_number = random.randint(1, 2)
-                            if random_number == 1:
-                                show_pirateships_left()
-                            if random_number == 2:
-                                show_pirateships_right()
-
-        # checks if the boat and an pirateship are colliding
-        for pirate_number in range(len(pirateships_left)):
-            if pirateships_left[pirate_number].x > 0:
-                if stage.collide(
-                    pirateships_left[pirate_number].x + 1,
-                    pirateships_left[pirate_number].y + 1,
-                    pirateships_left[pirate_number].x + 15,
-                    pirateships_left[pirate_number].y + 15,
-                    boat.x + 6,
-                    boat.y + 3,
-                    boat.x + 10,
-                    boat.y + 13,
-                ):
-                    # alien hit the ship
-                    sound.stop()
-                    # sound.play(pirate_boom)
-                    time.sleep(3.0)
-                    game_over_scene(score)
-
-        # checks if the boat and an pirateship are colliding
-        for pirate_number in range(len(pirateships_right)):
-            if pirateships_right[pirate_number].x > 0:
-                if stage.collide(
-                    pirateships_right[pirate_number].x + 1,
-                    pirateships_right[pirate_number].y + 1,
-                    pirateships_right[pirate_number].x + 15,
-                    pirateships_right[pirate_number].y + 15,
-                    boat.x + 6,
-                    boat.y + 3,
-                    boat.x + 10,
-                    boat.y + 13,
-                ):
-                    # alien hit the ship
-                    sound.stop()
-                    # sound.play(pirate_boom)
-                    time.sleep(3.0)
-                    game_over_scene(score)
-
-        """# redraw sprites
-        # game.render_sprites(pirateships_left + pirateships_right + [boat] + cannonballs)
-        game.render_sprites([boat] + cannonballs)
+        # redraw sprites
+        game.render_sprites(pirateships + [boat] + cannonballs)
         game.tick()
 
 
-def game_over_scene(final_score):
+def game_over_scene(final_score: int):
     # this function is the game over scene
 
     # turn off sound from last scene
@@ -542,7 +333,7 @@ def game_over_scene(final_score):
     text.append(text1)
 
     text2 = stage.Text(
-        width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
+        width=29, height=14, font=None, palette=constants.RED_PALETTE, buffer=None
     )
 
     text2.move(43, 60)

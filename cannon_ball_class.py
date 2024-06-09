@@ -38,3 +38,10 @@ class CannonBall:
 
     def is_cannon_ball_left_side(self) -> bool:
         return self.x_position < 74
+
+    def is_out_of_bounds(self) -> bool:
+        return (self.x_position > constants.SCREEN_X) or (self.x_position < -16)
+
+    def move_off_screen(self):
+        self.x_position = constants.OFF_SCREEN_X
+        self.y_position = constants.OFF_SCREEN_Y
