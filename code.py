@@ -31,13 +31,9 @@ def splash_scene():
     sound = ugame.audio
     sound.stop()
     sound.mute(False)
-    # sound.play(coin_sound)
-    
-    # image banks for CircuitPython
-    image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
+    sound.play(coin_sound)
 
-    # set the background to image 0 in the image bank
-    # and the size (10x8 tiles of size 16x16)
+    image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
     background = stage.Grid(image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
     
     # used this program to split the image into tile: 
@@ -70,20 +66,12 @@ def splash_scene():
     background.tile(6, 5, 0)
     background.tile(7, 5, 0)  # blank white
 
-    # create a stage for the background to show up on
-    # and set the frame rate to 60fps
     game = stage.Stage(ugame.display, constants.FPS)
-
-    # set all layers of all sprites, items show up in order
     game.layers = [background]
-
-    # render all sprites
-    # most likely you will only render the background once per game scene
     game.render_block()
 
-    # repeat forever, game loop
+    # game loop
     while True:
-        # wait for 2 seconds
         time.sleep(2.0)
         menu_scene()
 
@@ -93,116 +81,89 @@ def menu_scene():
     this function is the menu_scene
     """
 
-    # image banks for CircuitPython
-    image_bank1 = stage.Bank.from_bmp16("mt_game_studio.bmp")
-    image_bank2 = stage.Bank.from_bmp16("pirate_shooter.bmp")
+    image_bank = stage.Bank.from_bmp16("mt_game_studio.bmp")
+    background = stage.Grid(image_bank, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
 
-    # add text objects
     text = []
-    text1 = stage.Text(width=29, height=12, font=None, palette=constants.WHITE_BLACK_PALETTE, buffer=None)
+    text1 = stage.Text(width=29, height=12, font=None, palette=constants.RED_PALETTE, buffer=None)
     text1.move(10, 10)
     text1.text("PIRATE SHOOTER")
     text.append(text1)
     
-    text2 = stage.Text(width=29, height=12, font=None, palette=constants.RED_PALETTE, buffer=None)
+    text2 = stage.Text(width=29, height=12, font=None, palette=constants.BLUE_PALETTE, buffer=None)
     text2.move(10, 90)
     text2.text("SELECT: rules")
     text.append(text2)
 
-    text3 = stage.Text(width=29, height=12, font=None, palette=constants.RED_PALETTE, buffer=None)
+    text3 = stage.Text(width=29, height=12, font=None, palette=constants.BLUE_PALETTE, buffer=None)
     text3.move(10, 110)
     text3.text("START: start game")
     text.append(text3)
 
-    # set the background to image 0 in the image bank
-    # and the size (10x8 tiles of size 16x16)
-    background = stage.Grid(image_bank1, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
-    water = stage.Grid(image_bank2, 10, 4)
-
-    boat = stage.Sprite(image_bank2, 1, 74, 56)
-
-    # create a stage for the background to show up on
-    # and set the frame rate to 60fps
     game = stage.Stage(ugame.display, constants.FPS)
-
-    # set all layers of all sprites, items show up in order
-    game.layers = text + [boat] + [water] + [background]
-
-    # render all sprites
-    # most likely you will only render the background once per game scene
+    game.layers = text + [background]
     game.render_block()
 
-    # repeat forever, game loop
+    # game loop
     while True:
-        # get user input
         keys = ugame.buttons.get_pressed()
         
         if keys & ugame.K_START != 0:
             game_scene()
 
         if keys & ugame.K_SELECT != 0:
-            game_rules()
+            game_rules_scene()
 
-        # redraw sprites
         game.tick()
 
 
-def game_rules():
+def game_rules_scene():
     """
-    this function is the game_rules
+    this function is the game_rules_scene
     """
 
-    # image banks for CircuitPython
     image_bank = stage.Bank.from_bmp16("mt_game_studio.bmp")
+    background = stage.Grid(image_bank, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
 
     # add text objects
     text = []
-    text1 = stage.Text(width=29, height=12, font=None, palette=constants.BLUE_PALETTE, buffer=None)
+    text1 = stage.Text(width=29, height=12, font=None, palette=constants.RED_PALETTE, buffer=None)
     text1.move(10, 10)
     text1.text(
         "-Up and Down to\nmove.\n" +
         "-A and B to shoot.\n" +
         "-Player can warp\nbetween edges of\nthe screen.\n" +
-        "-If a projectile\nmisses, youlose\na point.\n"
+        "-If a projectile\nmisses, you lose\na point.\n"
     )
     text.append(text1)
 
-    text2 = stage.Text(width=29, height=12, font=None, palette=constants.RED_PALETTE, buffer=None)
-    text2.move(10, 110)
-    text2.text("PRESS START")
+    text2 = stage.Text(width=29, height=12, font=None, palette=constants.BLUE_PALETTE, buffer=None)
+    text2.move(10, 90)
+    text2.text("Good Luck!")
     text.append(text2)
 
-    # set the background to image 0 in the image bank
-    # and the size (10x8 tiles of size 16x16)
-    background = stage.Grid(image_bank, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
+    text3 = stage.Text(width=29, height=12, font=None, palette=constants.BLUE_PALETTE, buffer=None)
+    text3.move(10, 110)
+    text3.text("START: start game")
+    text.append(text3)
 
-
-    # create a stage for the background to show up on
-    # and set the frame rate to 60fps
     game = stage.Stage(ugame.display, constants.FPS)
-
-    # set all layers of all sprites, items show up in order
     game.layers = text + [background]
-
-    # render all sprites
-    # most likely you will only render the background once per game scene
     game.render_block()
 
-    # repeat forever, game loop
+    # game loop
     while True:
-        # get user input
         keys = ugame.buttons.get_pressed()
         
         if keys & ugame.K_START != 0:
             game_scene()
 
-        # redraw sprites
         game.tick()
 
 
 def game_scene():
     """
-    This function is for the main game
+    this function is the game_scene
     """
     
     # for score
@@ -214,8 +175,8 @@ def game_scene():
     score_text.move(1, 1)
     score_text.text("Score: {0}".format(score))
 
-    # image banks for CircuitPython
     image_bank = stage.Bank.from_bmp16("pirate_shooter.bmp")
+    background = stage.Grid(image_bank, 10, 8)
 
     # buttons that you want to keep state information on
     a_button = constants.button_state["button_up"]
@@ -226,18 +187,15 @@ def game_scene():
     # get sound ready
     cannon_sound = open("player_cannon.wav", "rb")
     pirate_boom = open("pirate_explosion.wav", "rb")
-    """sound = ugame.audio
+    sound = ugame.audio
     sound.stop()
-    sound.mute(False)"""
+    sound.mute(False)
 
-    # set the background to image 0 in the image bank
-    # and the size (10x8 tiles of size 16x16)
-    background = stage.Grid(image_bank, 10, 8)
+    # create boat object
+    # boat = stage.Sprite(image_bank, 1, 74, 56)
+    boat_object = Boat(image_bank, 1, 74, 56)
 
-    boat = stage.Sprite(image_bank, 1, 74, 56)
-    boat_object = Boat(74, 56)
-
-    # create list of pirateships,for both the left and right side
+    # create pirate ships object(s)
     pirateships = []
     pirateship_objects = PirateShipList()
 
@@ -259,7 +217,7 @@ def game_scene():
     pirateship_objects.spawn_pirateship_right()
     pirateship_objects.spawn_pirateship_left()
     
-    # create list of cannonballs for when we shoot
+    # create cannon ball object(s)
     cannonballs = []
     cannonball_objects = CannonBallList()
 
@@ -270,18 +228,11 @@ def game_scene():
         a_cannon_ball_object = CannonBall(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
         cannonball_objects.add_to_list(a_cannon_ball_object)
 
-    # create a stage for the background to show up on
-    # and set the frame rate to 60fps
     game = stage.Stage(ugame.display, 60)
-
-    # set all layers of all sprites, items show up in order
     game.layers = [score_text] + pirateships + [boat] + cannonballs + [background]
-
-    # render all sprites
-    # most likely you will only render the background once per game scene
     game.render_block()
 
-    # repeat forever, game loop
+    # game loop
     while True:
         # get user input
         keys = ugame.buttons.get_pressed()
@@ -352,8 +303,8 @@ def game_scene():
             score_text.text(f"Score: {score:.0f}")
 
         if pirateship_objects.is_cannon_ball_colliding(cannonball_objects):
-            sound.stop()
-            # sound.play(pirate_boom)
+            # sound.stop()
+            sound.play(pirate_boom)
             score += 1
             score_text.clear()
             score_text.cursor(0, 0)
@@ -362,7 +313,7 @@ def game_scene():
 
         if pirateship_objects.is_boat_colliding(boat_object):
             # sound.stop()
-            # sound.play(pirate_boom)
+            sound.play(pirate_boom)
             time.sleep(2.0)
             game_over_scene(score)
 
@@ -389,28 +340,26 @@ def game_over_scene(final_score: int):
 
     # add text objects
     text = []
-    text1 = stage.Text(
-        width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
-    )
 
-    text1.move(22, 20)
-    text1.text(f"Final Score: {final_score:.0f}")
+    text1 = stage.Text(
+        width=29, height=14, font=None, palette=constants.RED_PALETTE, buffer=None
+    )
+    text1.move(10, 10)
+    text1.text("GAME OVER")
     text.append(text1)
 
     text2 = stage.Text(
-        width=29, height=14, font=None, palette=constants.RED_PALETTE, buffer=None
+        width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
     )
-
-    text2.move(43, 60)
-    text2.text("GAME OVER")
+    text2.move(10, 90)
+    text2.text(f"FINAL SCORE: {final_score:.0f}")
     text.append(text2)
 
     text3 = stage.Text(
         width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
     )
-
-    text3.move(32, 110)
-    text3.text("PRESS SELECT")
+    text3.move(10, 110)
+    text3.text("START: reload game")
     text.append(text3)
 
     # create a stage for the background to show up on
@@ -430,12 +379,11 @@ def game_over_scene(final_score: int):
         keys = ugame.buttons.get_pressed()
 
         # get user input
-        if keys & ugame.K_SELECT != 0:
+        if keys & ugame.K_START != 0:
             supervisor.reload()
 
         # update game logic
         game.tick()  # wait until refresh rate finishes
-
 
 if __name__ == "__main__":
     splash_scene()
