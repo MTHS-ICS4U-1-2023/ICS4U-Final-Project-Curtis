@@ -31,7 +31,7 @@ def splash_scene():
     sound = ugame.audio
     sound.stop()
     sound.mute(False)
-    sound.play(coin_sound)
+    # sound.play(coin_sound)
 
     image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
     background = stage.Grid(image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
@@ -193,7 +193,8 @@ def game_scene():
 
     # create boat object
     # boat = stage.Sprite(image_bank, 1, 74, 56)
-    boat_object = Boat(image_bank, 1, 74, 56)
+    boat = stage.Sprite(image_bank, 1, 74, 56)
+    boat_object = Boat(74, 56)
 
     # create pirate ships object(s)
     pirateships = []
@@ -304,7 +305,7 @@ def game_scene():
 
         if pirateship_objects.is_cannon_ball_colliding(cannonball_objects):
             # sound.stop()
-            sound.play(pirate_boom)
+            # sound.play(pirate_boom)
             score += 1
             score_text.clear()
             score_text.cursor(0, 0)
@@ -313,7 +314,7 @@ def game_scene():
 
         if pirateship_objects.is_boat_colliding(boat_object):
             # sound.stop()
-            sound.play(pirate_boom)
+            # sound.play(pirate_boom)
             time.sleep(2.0)
             game_over_scene(score)
 
