@@ -34,7 +34,11 @@ def splash_scene():
     # sound.play(coin_sound)
 
     image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
-    background = stage.Grid(image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
+    background = stage.Grid(
+        image_bank_mt_background,
+        constants.SCREEN_GRID_X,
+        constants.SCREEN_GRID_Y
+    )
     
     # used this program to split the image into tile: 
     #   https://ezgif.com/sprite-cutter/ezgif-5-818cdbcc3f66.png
